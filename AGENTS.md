@@ -94,6 +94,7 @@ code changes — docs are part of the deliverable, not an afterthought.
 - **`docs/best_practices.md`** — tips for using the server effectively.
 - **`docs/use_cases.md`** — worked scenarios demonstrating the server.
 - **`docs/gemini-cli.md`** — client setup for the Gemini CLI.
+- **`docs/claude-code.md`** — client setup for Claude Code (plugin mode).
 - **`docs/contributing.md`** / **`docs/code-of-conduct.md`** — contribution
   guidelines and community standards.
 
