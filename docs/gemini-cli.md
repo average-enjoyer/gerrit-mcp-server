@@ -47,25 +47,9 @@ recommended for frequent use.
 In STDIO mode, the Gemini CLI starts the MCP server on-demand for each request.
 This is useful if you don't want a server running in the background.
 
-**Configure Gemini CLI:** Add the following to your
-`$HOME/.gemini/settings.json` file. Make sure to replace `<path_to_project>`
-with the absolute path to your `gerrit-mcp-server` project directory.
-
-```json
-{
-  "mcpServers": {
-    "gerrit": {
-      "command": "<path_to_project>/.venv/bin/python",
-      "args": [
-        "<path_to_project>/gerrit_mcp_server/main.py",
-        "stdio"
-      ],
-      "env": {
-        "PYTHONPATH": "<path_to_project>/"
-      }
-    }
-  }
-}
-```
+**Configure Gemini CLI:** Add the same content from
+[`gemini-extension.json`](./gemini-extension.json) to your
+`$HOME/.gemini/settings.json` file. Make sure to replace `${extensionPath}` with
+the absolute path to your `gerrit-mcp-server` project directory.
 
 Now, when you run `gemini`, you can use the `@gerrit` tool directly.
