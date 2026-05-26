@@ -167,6 +167,56 @@ uv run gerrit-mcp-server
 
 - **Logs:** The server outputs logs to stderr.
 
+## Tool Design
+
+### Structured Output
+
+All tools should return a typed `TypedDict` rather than assembling
+`[{"type": "text", "text": ...}]` content blocks manually. The MCP SDK
+auto-generates an `output_schema` from the return annotation and produces both
+structured and unstructured content automatically — structured for clients that
+support it, text fallback for those that don't.
+
+- Declare a `TypedDict` for the return type; use `Optional[X]` (not
+  `NotRequired`) for optional fields, and always include the key in every return
+  path (set to `None` when there is no value).
+- Return the dict directly from the function.
+- Raise exceptions on error rather than returning text error content blocks.
+
+> [!IMPORTANT] Do **not** use `NotRequired` in tool-result `TypedDict`s — it
+> causes the MCP SDK to raise validation errors either when annotations are
+> stringized (`from __future__ import annotations`) or when any return path
+> omits the key (validated as `None` against the declared type). Use
+> `Optional[X]` and set `"key": None` on every path that has no value.
+
+```python
+from typing import List, Optional, TypedDict
+
+class _ParentChange(TypedDict):
+    change_number: int
+    subject: str
+    work_in_progress: bool
+
+class _MyToolResult(TypedDict):
+    change_id: str
+    items: List[_ParentChange]
+    note: Optional[str]   # None unless there is something to say
+
+@mcp.tool()
+async def my_tool(
+    change_id: str,
+    gerrit_base_url: Optional[str] = None,
+) -> _MyToolResult:
+    ...
+    try:
+        raw = json.loads(await run_curl([url], base_url))
+    except json.JSONDecodeError as e:
+        raise ValueError(f"Failed to parse Gerrit response: {e}") from e
+    return {"change_id": change_id, "items": [...], "note": None}
+```
+
+See `get_commit_message` in `gerrit_mcp_server/main.py` for a complete example.
+
 ## Contributing
 
 ### Creating a CL
