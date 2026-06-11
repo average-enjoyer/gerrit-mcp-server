@@ -51,6 +51,12 @@ Ensure your virtual environment is activated, then run:
 ./test.sh
 ```
 
+### Making any changes to source
+
+If any changes to source are ever made, you must run `./test.sh` to validate
+that the changes did not break any tests. Ask the user first after any changes
+are made.
+
 ## Runtime & Configuration
 
 ### Configuration
